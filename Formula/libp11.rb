@@ -33,7 +33,6 @@ class Libp11 < Formula
   depends_on "pkg-config" => :build
   depends_on "libtool"
   depends_on "openssl@3"
-  depends_on "openssl@1.1" => :optional
 
   def install
     system "./bootstrap" if build.head?
