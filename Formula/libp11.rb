@@ -1,3 +1,6 @@
+# typed: false
+# frozen_string_literal: true
+
 class Libp11 < Formula
   desc "PKCS#11 wrapper library in C"
   homepage "https://github.com/OpenSC/libp11/wiki"
@@ -30,19 +33,31 @@ class Libp11 < Formula
   depends_on "pkg-config" => :build
   depends_on "libtool"
   depends_on "openssl@3"
+  depends_on "openssl@1.1" => :optional
 
   def install
     system "./bootstrap" if build.head?
-    system "./configure", *std_configure_args,
-                          "--disable-silent-rules",
-                          "--with-enginesdir=#{lib}/engines-1.1"
-    system "make", "install"
+    ["openssl@1.1", "openssl@3"].each do |pkg|
+      ver = pkg.split(/@/)[-1]
+      openssl = Formula[pkg]
+      next unless openssl.any_version_installed?
+
+      ENV.prepend_path "HOMEBREW_INCLUDE_PATHS", openssl.opt_include.to_s
+      ENV.prepend_path "HOMEBREW_LIBRARY_PATHS", openssl.opt_lib.to_s
+      ENV.prepend_path "PKG_CONFIG_PATH", "#{openssl.opt_lib}/pkgconfig"
+      system "./configure", *std_configure_args,
+             "--disable-silent-rules",
+             "--with-enginesdir=#{lib}/engines-#{ver}"
+      system "make"
+      system "make", "install"
+      system "make", "clean"
+    end
     pkgshare.install "examples/auth.c"
   end
 
   test do
     system ENV.cc, pkgshare/"auth.c", "-I#{Formula["openssl@3"].include}",
-                   "-L#{lib}", "-L#{Formula["openssl@3"].lib}",
-                   "-lp11", "-lcrypto", "-o", "test"
+           "-L#{lib}", "-L#{Formula["openssl@3"].lib}",
+           "-lp11", "-lcrypto", "-o", "test"
   end
 end
