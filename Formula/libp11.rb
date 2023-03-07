@@ -43,8 +43,7 @@ class Libp11 < Formula
       ENV.prepend_path "PKG_CONFIG_PATH", "#{openssl.opt_lib}/pkgconfig"
       system "./configure", *std_configure_args,
              "--disable-silent-rules",
-             "--with-enginesdir=#{lib}/engines-#{ver}"
-      system "make"
+             "--with-enginesdir=#{lib}/engines-#{ver}"ruby 
       system "make", "install"
       system "make", "clean"
     end
