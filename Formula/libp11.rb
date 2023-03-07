@@ -58,6 +58,7 @@ class Libp11 < Formula
       ver = pkg.split(/@/)[-1]
       openssl = Formula[pkg]
       next unless openssl.any_version_installed?
+
       File.open("./openssl.conf", "w") do |file|
         file.puts "
 openssl_conf = openssl_init
