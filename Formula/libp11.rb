@@ -1,6 +1,3 @@
-# typed: false
-# frozen_string_literal: true
-
 class Libp11 < Formula
   desc "PKCS#11 wrapper library in C"
   homepage "https://github.com/OpenSC/libp11/wiki"
