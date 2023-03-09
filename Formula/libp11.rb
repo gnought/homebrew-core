@@ -78,6 +78,5 @@ class Libp11 < Formula
       ENV["OPENSSL_CONF"] = "./openssl.conf"
       system "#{openssl.opt_bin}/openssl", "engine", "pkcs11", "-t"
     end
-
   end
 end
