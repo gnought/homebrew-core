@@ -76,7 +76,7 @@ class Libp11 < Formula
         init = 0
       EOS
       ENV["OPENSSL_CONF"] = "./openssl.conf"
-      system "#{openssl.bin}/openssl", "engine", "pkcs11", "-t"
+      system "#{openssl.opt_bin}/openssl", "engine", "pkcs11", "-t"
     end
 
   end
