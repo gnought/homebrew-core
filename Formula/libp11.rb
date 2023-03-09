@@ -64,19 +64,17 @@ class Libp11 < Formula
       openssl = Formula[pkg]
       next unless openssl.any_version_installed?
 
-      File.open("./openssl.conf", "w") do |file|
-        file.puts "
-openssl_conf = openssl_init
-[openssl_init]
-engines = engine_section
-[engine_section]
-pkcs11 = pkcs11_section
-[pkcs11_section]
-engine_id = pkcs11
-dynamic_path = #{lib}/engines-#{ver}/pkcs11.dylib
-init = 0
-      "
-      end
+      File.write("./openssl.conf", <<~EOS)
+        openssl_conf = openssl_init
+        [openssl_init]
+        engines = engine_section
+        [engine_section]
+        pkcs11 = pkcs11_section
+        [pkcs11_section]
+        engine_id = pkcs11
+        dynamic_path = #{lib}/engines-#{ver}/pkcs11.dylib
+        init = 0
+      EOS
       ENV["OPENSSL_CONF"] = "./openssl.conf"
       system "#{openssl.bin}/openssl", "engine", "pkcs11", "-t"
     end
